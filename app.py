@@ -18,6 +18,13 @@ app = Flask(__name__)
 app.secret_key = "dev-secret-key-change-in-production"
 
 
+@app.context_processor
+def inject_current_user():
+    if session.get("user_id"):
+        return {"current_user": get_user_by_id(session["user_id"])}
+    return {}
+
+
 # ------------------------------------------------------------------ #
 # Routes                                                              #
 # ------------------------------------------------------------------ #
