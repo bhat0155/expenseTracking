@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Your profile — Spendly{% endblock %}
+
+{% block content %}
+
+<section class="auth-section">
+    <div class="auth-container">
+
+        <div class="auth-header">
+            <h1 class="auth-title">Your profile</h1>
+            <p class="auth-subtitle">Manage your account details</p>
+        </div>
+
+        {% if error %}
+        <div class="auth-error">{{ error }}</div>
+        {% endif %}
+        {% if success %}
+        <div class="auth-success">{{ success }}</div>
+        {% endif %}
+
+        <p class="profile-meta">Member since {{ user["created_at"] }}</p>
+
+        <form method="POST" action="{{ url_for('profile') }}">
+            <div class="form-group">
+                <label for="name">Full name</label>
+                <input type="text" id="name" name="name"
+                       class="form-input" value="{{ user['name'] }}"
+                       required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" id="email" name="email"
+                       class="form-input" value="{{ user['email'] }}"
+                       required>
+            </div>
+            <button type="submit" class="btn-submit">Save changes</button>
+        </form>
+
+    </div>
+</section>
+
+<section class="expense-section">
+    <h2 class="expense-title">Your expenses</h2>
+
+    {% if expenses %}
+    <div class="expense-list">
+        {% for expense in expenses %}
+        <div class="expense-row">
+            <span class="expense-icon">{{ expense["category"][0] }}</span>
+            <div class="expense-info">
+                <span class="expense-desc">{{ expense["description"] or expense["category"] }}</span>
+                <span class="expense-sub">{{ expense["category"] }} · {{ expense["date"] }}</span>
+            </div>
+            <span class="expense-amount">₹{{ "%.2f"|format(expense["amount"]) }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="expense-empty">No expenses yet.</p>
+    {% endif %}
+</section>
+
+{% endblock %}

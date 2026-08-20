@@ -3,7 +3,16 @@ import sqlite3
 from flask import Flask, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from database.db import create_user, get_db, get_user_by_email, init_db, seed_db
+from database.db import (
+    create_user,
+    get_db,
+    get_expenses_by_user,
+    get_user_by_email,
+    get_user_by_id,
+    init_db,
+    seed_db,
+    update_user,
+)
 
 app = Flask(__name__)
 app.secret_key = "dev-secret-key-change-in-production"
@@ -83,14 +92,45 @@ def privacy():
     return render_template("privacy.html")
 
 
+@app.route("/profile", methods=["GET", "POST"])
+def profile():
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+
+    user_id = session["user_id"]
+
+    def render_profile(**kwargs):
+        return render_template(
+            "profile.html",
+            user=get_user_by_id(user_id),
+            expenses=get_expenses_by_user(user_id),
+            **kwargs,
+        )
+
+    if request.method != "POST":
+        return render_profile()
+
+    name = request.form.get("name", "").strip()
+    email = request.form.get("email", "").strip()
+
+    if not name or not email:
+        return render_profile(error="All fields are required."), 400
+
+    existing = get_user_by_email(email)
+    if existing is not None and existing["id"] != user_id:
+        return render_profile(error="An account with that email already exists."), 400
+
+    try:
+        update_user(user_id, name, email)
+    except sqlite3.IntegrityError:
+        return render_profile(error="An account with that email already exists."), 400
+
+    return render_profile(success="Profile updated successfully.")
+
+
 # ------------------------------------------------------------------ #
 # Placeholder routes — students will implement these                  #
 # ------------------------------------------------------------------ #
-
-@app.route("/profile")
-def profile():
-    return "Profile page — coming in Step 4"
-
 
 @app.route("/expenses/add")
 def add_expense():
