@@ -1,0 +1,2 @@
+- [Project conventions](project_conventions.md) — confirmed-good patterns (parameterized SQL, FK pragma, ownership-via-session, no `| safe`) as of Step 7 review; watch expense edit/delete stubs for IDOR when implemented
+- [Project gaps](project_gaps.md) — known pre-existing, project-wide gaps (no CSRF anywhere, debug=True, dev secret key) — treat as known, not fresh findings, unless task is production-hardening
