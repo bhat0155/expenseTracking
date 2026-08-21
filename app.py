@@ -165,7 +165,7 @@ def add_expense():
     except ValueError:
         amount = None
 
-    if amount is None or amount <= 0 or category not in CATEGORIES or not expense_date:
+    if amount is None or not (amount > 0) or category not in CATEGORIES or not expense_date:
         return render_template(
             "add_expense.html",
             categories=CATEGORIES,
