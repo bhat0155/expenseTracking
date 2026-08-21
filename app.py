@@ -4,8 +4,11 @@ from flask import Flask, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from database.db import (
+    CATEGORIES,
+    create_expense,
     create_user,
     get_db,
+    get_expenses_by_user,
     get_user_by_email,
     get_user_by_id,
     init_db,
@@ -109,6 +112,7 @@ def profile():
         return render_template(
             "profile.html",
             user=get_user_by_id(user_id),
+            expenses=get_expenses_by_user(user_id),
             **kwargs,
         )
 
@@ -141,14 +145,40 @@ def analytics():
     return render_template("analytics.html")
 
 
+@app.route("/expenses/add", methods=["GET", "POST"])
+def add_expense():
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+
+    user_id = session["user_id"]
+
+    if request.method != "POST":
+        return render_template("add_expense.html", categories=CATEGORIES)
+
+    amount_raw = request.form.get("amount", "").strip()
+    category = request.form.get("category", "").strip()
+    expense_date = request.form.get("date", "").strip()
+    description = request.form.get("description", "").strip() or None
+
+    try:
+        amount = float(amount_raw)
+    except ValueError:
+        amount = None
+
+    if amount is None or amount <= 0 or category not in CATEGORIES or not expense_date:
+        return render_template(
+            "add_expense.html",
+            categories=CATEGORIES,
+            error="Please provide a valid amount, category, and date.",
+        ), 400
+
+    create_expense(user_id, amount, category, expense_date, description)
+    return redirect(url_for("profile"))
+
+
 # ------------------------------------------------------------------ #
 # Placeholder routes — students will implement these                  #
 # ------------------------------------------------------------------ #
-
-@app.route("/expenses/add")
-def add_expense():
-    return "Add expense — coming in Step 7"
-
 
 @app.route("/expenses/<int:id>/edit")
 def edit_expense(id):
