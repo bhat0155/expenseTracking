@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Delete expense — Spendly{% endblock %}
+
+{% block content %}
+
+<section class="auth-section">
+    <div class="auth-container">
+
+        <div class="auth-header">
+            <h1 class="auth-title">Delete expense</h1>
+            <p class="auth-subtitle">Are you sure you want to delete this expense? This action cannot be undone.</p>
+        </div>
+
+        <p class="profile-meta">Date: {{ expense["date"] }}</p>
+        <p class="profile-meta">Category: {{ expense["category"] }}</p>
+        <p class="profile-meta">Description: {{ expense["description"] or "—" }}</p>
+        <p class="profile-meta">Amount: ₹{{ "%.2f"|format(expense["amount"]) }}</p>
+
+        <form method="POST" action="{{ url_for('delete_expense', id=expense['id']) }}">
+            <button type="submit" class="btn-submit">Delete expense</button>
+        </form>
+
+        <p class="auth-switch">
+            <a href="{{ url_for('profile') }}">Cancel</a>
+        </p>
+
+    </div>
+</section>
+
+{% endblock %}

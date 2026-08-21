@@ -130,3 +130,10 @@ def update_expense(expense_id, amount, category, date, description):
     )
     conn.commit()
     conn.close()
+
+
+def delete_expense_by_id(expense_id):
+    conn = get_db()
+    conn.execute("DELETE FROM expenses WHERE id = ?", (expense_id,))
+    conn.commit()
+    conn.close()
