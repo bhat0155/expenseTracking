@@ -91,7 +91,8 @@ No `tests/` directory exists yet — create one as features gain test coverage.
 | `GET /profile` | Implemented — renders `profile.html` |
 | `GET /expenses/add` | Implemented — renders `add_expense.html` |
 | `POST /expenses/add` | Implemented — validates and inserts expense, redirects to `/profile` |
-| `GET /expenses/<id>/edit` | Stub — Step 8 |
+| `GET /expenses/<id>/edit` | Implemented — renders `edit_expense.html` pre-filled, 404 if not found/not owned |
+| `POST /expenses/<id>/edit` | Implemented — validates and updates expense, redirects to `/profile` |
 | `GET /expenses/<id>/delete` | Stub — Step 9 |
 
 Do not implement a stub route unless the active task explicitly targets that step.
