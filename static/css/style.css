@@ -102,6 +102,7 @@ a { color: inherit; text-decoration: none; }
 
 .nav-links a { color: var(--ink-muted); transition: color 0.2s; }
 .nav-links a:hover { color: var(--ink); }
+.nav-links a.active { color: var(--ink); font-weight: 600; }
 
 .nav-cta {
     background: var(--ink) !important;
@@ -545,6 +546,125 @@ a { color: inherit; text-decoration: none; }
     font-size: 0.85rem;
     color: var(--ink-muted);
     margin-bottom: 1.5rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Coming soon (Analytics)                                             */
+/* ------------------------------------------------------------------ */
+
+.coming-soon-section {
+    min-height: calc(100vh - 60px - 100px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+}
+
+.coming-soon-card {
+    position: relative;
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 3.5rem 2.5rem;
+    width: 100%;
+    max-width: 440px;
+    text-align: center;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.06);
+}
+
+.coming-soon-card::before,
+.coming-soon-card::after {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    border-radius: 50%;
+    background: var(--paper-warm);
+    opacity: 0.6;
+}
+
+.coming-soon-card::before {
+    width: 140px;
+    height: 140px;
+    top: -70px;
+    right: -70px;
+}
+
+.coming-soon-card::after {
+    width: 100px;
+    height: 100px;
+    bottom: -50px;
+    left: -50px;
+}
+
+.coming-soon-content {
+    position: relative;
+    z-index: 1;
+}
+
+.coming-soon-icon {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 1.75rem;
+    background: var(--accent);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(26, 71, 42, 0.25);
+}
+
+.coming-soon-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: var(--paper);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.5rem 1.25rem;
+    border-radius: 999px;
+    margin-bottom: 1.5rem;
+}
+
+.coming-soon-title {
+    font-family: var(--font-body);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 1rem;
+}
+
+.coming-soon-subtitle {
+    font-size: 0.95rem;
+    color: var(--ink-muted);
+    line-height: 1.7;
+    max-width: 340px;
+    margin: 0 auto 1.75rem;
+}
+
+.coming-soon-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+}
+
+.coming-soon-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.coming-soon-dot-1 { background: var(--accent); }
+.coming-soon-dot-2 { background: #8ba593; }
+.coming-soon-dot-3 { background: #cfd6d1; }
+
+.coming-soon-caption {
+    font-size: 0.85rem;
+    color: var(--ink-faint);
 }
 
 /* ------------------------------------------------------------------ */
