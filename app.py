@@ -1,6 +1,6 @@
 import sqlite3
 
-from flask import Flask, redirect, render_template, request, session, url_for
+from flask import Flask, abort, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from database.db import (
@@ -8,11 +8,13 @@ from database.db import (
     create_expense,
     create_user,
     get_db,
+    get_expense_by_id,
     get_expenses_by_user,
     get_user_by_email,
     get_user_by_id,
     init_db,
     seed_db,
+    update_expense,
     update_user,
 )
 
@@ -176,14 +178,43 @@ def add_expense():
     return redirect(url_for("profile"))
 
 
+@app.route("/expenses/<int:id>/edit", methods=["GET", "POST"])
+def edit_expense(id):
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+
+    expense = get_expense_by_id(id)
+    if expense is None or expense["user_id"] != session["user_id"]:
+        abort(404)
+
+    if request.method != "POST":
+        return render_template("edit_expense.html", categories=CATEGORIES, expense=expense)
+
+    amount_raw = request.form.get("amount", "").strip()
+    category = request.form.get("category", "").strip()
+    expense_date = request.form.get("date", "").strip()
+    description = request.form.get("description", "").strip() or None
+
+    try:
+        amount = float(amount_raw)
+    except ValueError:
+        amount = None
+
+    if amount is None or not (amount > 0) or category not in CATEGORIES or not expense_date:
+        return render_template(
+            "edit_expense.html",
+            categories=CATEGORIES,
+            expense=expense,
+            error="Please provide a valid amount, category, and date.",
+        ), 400
+
+    update_expense(id, amount, category, expense_date, description)
+    return redirect(url_for("profile"))
+
+
 # ------------------------------------------------------------------ #
 # Placeholder routes — students will implement these                  #
 # ------------------------------------------------------------------ #
-
-@app.route("/expenses/<int:id>/edit")
-def edit_expense(id):
-    return "Edit expense — coming in Step 8"
-
 
 @app.route("/expenses/<int:id>/delete")
 def delete_expense(id):
