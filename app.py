@@ -1,3 +1,4 @@
+import os
 import sqlite3
 
 from flask import Flask, abort, redirect, render_template, request, session, url_for
@@ -20,7 +21,7 @@ from database.db import (
 )
 
 app = Flask(__name__)
-app.secret_key = "dev-secret-key-change-in-production"
+app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key-change-in-production")
 
 
 @app.context_processor
@@ -239,4 +240,4 @@ with app.app_context():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    app.run(host="0.0.0.0", port=5001, debug=not os.environ.get("RAILWAY_ENVIRONMENT"))

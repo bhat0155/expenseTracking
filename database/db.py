@@ -1,9 +1,15 @@
+import os
 import sqlite3
 from pathlib import Path
 
 from werkzeug.security import generate_password_hash
 
-DB_PATH = Path(__file__).resolve().parent.parent / "expense_tracker.db"
+if os.environ.get("VERCEL"):
+    # Vercel's deployment filesystem is read-only outside /tmp; the app
+    # can still boot and demo, but data resets on every cold start.
+    DB_PATH = Path("/tmp/expense_tracker.db")
+else:
+    DB_PATH = Path(__file__).resolve().parent.parent / "expense_tracker.db"
 
 CATEGORIES = ["Food", "Transport", "Bills", "Health", "Entertainment", "Shopping", "Other"]
 
